@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Page {
+  id          Int       @id @default(autoincrement())
+  title       String
+  slug        String    @unique
+  content     String
+  isActive    Boolean   @default(true)
+  seoMetaId   Int?
+  seoMeta     SeoMeta?  @relation(fields: [seoMetaId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model ServiceCategory {
+  id        Int       @id @default(autoincrement())
+  name      String
+  slug      String    @unique
+  services  Service[]
+}
+
+model Service {
+  id          Int              @id @default(autoincrement())
+  title       String
+  slug        String           @unique
+  summary     String
+  content     String
+  isActive    Boolean          @default(true)
+  categoryId  Int?
+  category    ServiceCategory? @relation(fields: [categoryId], references: [id])
+  seoMetaId   Int?
+  seoMeta     SeoMeta?         @relation(fields: [seoMetaId], references: [id])
+}
+
+model BlogCategory {
+  id        Int        @id @default(autoincrement())
+  name      String
+  slug      String     @unique
+  posts     BlogPost[]
+}
+
+model BlogPost {
+  id          Int           @id @default(autoincrement())
+  title       String
+  slug        String        @unique
+  excerpt     String
+  content     String
+  isActive    Boolean       @default(true)
+  categoryId  Int?
+  category    BlogCategory? @relation(fields: [categoryId], references: [id])
+  seoMetaId   Int?
+  seoMeta     SeoMeta?      @relation(fields: [seoMetaId], references: [id])
+  createdAt   DateTime      @default(now())
+}
+
+model Region {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  content     String
+  isActive    Boolean   @default(true)
+  seoMetaId   Int?
+  seoMeta     SeoMeta?  @relation(fields: [seoMetaId], references: [id])
+}
+
+model Project {
+  id          Int       @id @default(autoincrement())
+  title       String
+  slug        String    @unique
+  summary     String
+  content     String
+  isActive    Boolean   @default(true)
+  seoMetaId   Int?
+  seoMeta     SeoMeta?  @relation(fields: [seoMetaId], references: [id])
+}
+
+model SeoMeta {
+  id              Int      @id @default(autoincrement())
+  metaTitle       String
+  metaDescription String
+  ogImage         String?
+  canonicalUrl    String?
+  robots          String   @default("index,follow")
+}
+
+model SchemaConfig {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  jsonLd    String
+  isActive  Boolean  @default(true)
+}
+
+model SiteSetting {
+  id               Int      @id @default(autoincrement())
+  companyName      String
+  phone            String?
+  email            String?
+  address          String?
+  whatsappNumber   String?
+  socialLinks      String?
+  customHeadScript String?
+  customBodyScript String?
+}
